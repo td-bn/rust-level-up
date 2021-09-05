@@ -101,11 +101,11 @@ For simple types like integers, we have simple values with a known fixed size wh
 
 String are more complex. They are not stored on the stack and do not have a fixed known size. This is how strings are stored. 
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/11eeaf18-c413-482b-bdfe-7164f704c2a9/Untitled.png)
+![image](https://user-images.githubusercontent.com/84708985/132127339-2242efec-684b-4b64-9a42-3aebeb139ac2.png)
 
 The metadata part of the left, is of known size and is stored on the stack. Whereas the contents of the string itself are stored on the heap. 
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/e666dba4-7453-4329-a0ce-9b8bc0e90b2f/Untitled.png)
+![image](https://user-images.githubusercontent.com/84708985/132127349-8a74ee3c-ca9d-4945-83fa-3569cb84b853.png)
 
 When we copy strings, we do not copy the data on the heap itself, instead we copy only the pointer to the data. If Rust copied the data on the heap, the operation s2 = s1 could be very expensive in terms of runtime performance if the data on the heap were large.
 
@@ -120,7 +120,8 @@ But, copying the pointer raises concerns. When s2 and s1 go out of scope, they w
 
 s2=s1 looks like a shollow copy based on copying pointer to the string, but Rust also invalidates the first variable, so instead of being called a shallow copy, it’s known as a **move**.
 
-![Untitled](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/e6c5b2e6-2f5a-42c2-b499-52f3ef157203/Untitled.png)
+![image](https://user-images.githubusercontent.com/84708985/132127365-f555692e-2930-4ca0-9cec-fd842c1cb91e.png)
+
 
 That solves our problem! With only s2 valid, when it goes out of scope, it alone will free the memory, and we’re done.
 
