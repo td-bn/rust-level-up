@@ -171,8 +171,99 @@ fn main() {
         let Point{x, ..} = left;
         println!("x:{}", x);
 
+    }
 
 
+    // Let patterns can be used as conditions in if
+    {
+        struct Number {
+            odd: bool,
+            value: i32
+        }
+
+        fn driver() {
+            let one = Number {odd: true, value: 1};
+            let hundred = Number {odd: false, value: 100};
+            print_number(one);
+            print_number(hundred);
+        }
+
+        fn print_number(n: Number) {
+            if let Number {odd: true, value} = n {
+                println!("Odd number: {}", value);
+            } else if let Number {odd: false, value} = n {
+                println!("Even number: {}", value);
+            }
+        }
+        driver();
+    }
+
+    // match arms are also patterns, just like if let:
+    {
+        struct Number {
+            odd: bool,
+            value: i32
+        }
+
+        fn driver() {
+            let one = Number {odd: true, value: 1};
+            let hundred = Number {odd: false, value: 100};
+            print_number(one);
+            print_number(hundred);
+        }
+
+        fn print_number(n: Number) {
+            match n {
+                Number {odd: true, value} => println!("Odd number: {}", value),
+                Number {odd: false, value} => println!("Even number: {}", value)
+            }
+        }
+        driver();
+    }
+
+    // A match has to be exhaustive: at least one arm needs to match.
+    {
+        struct Number {
+            value: i32
+        }
+
+        let one = Number {value: 1};
+        let hundred = Number {value: 100};
+
+        fn print_number(n: Number) {
+            match n.value {
+                1 => println!("One"),
+                2 => println!("Two"),
+                _ => println!("{}", n.value)
+            }
+        }
+
+        print_number(one);
+        print_number(hundred);
+
+    }
+
+    // You can declare methods on your own types:
+    {
+        struct Number {
+            value: i32
+        }
+
+        impl Number {
+            fn is_positive(self) -> bool {
+                self.value > 0
+            }
+        }
+
+        let minusone = Number {value: -1};
+        let hundred = Number {value: 100};
+
+        fn print_number(n: Number) {
+            println!("Positive? {}", n.is_positive());
+        }
+
+        print_number(minusone);
+        print_number(hundred);
 
     }
 
