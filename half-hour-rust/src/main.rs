@@ -267,5 +267,104 @@ fn main() {
 
     }
 
+    // Variable bindings are immutable by default
+    {
+        struct Number {
+            odd: bool,
+            value: i32
+        }
 
+        let n = Number {
+            odd: true,
+            value: 99
+        };
+        // n.value = 97; Error
+        // n = Number { odd: false, value: 90} //Error
+        println!("{} {}", n.odd, n.value);
+    }
+
+    // mut makes a variable binding mutable
+    {
+        struct Number {
+            odd: bool,
+            value: i32
+        }
+
+        let mut n = Number {
+            odd: true,
+            value: 99
+        };
+
+        n.value = 96;
+        n.odd = false;
+    }
+
+    // Traits
+    /*
+        Traits are something that multiple types have in common.
+
+        (ORPHAN RULES)
+        We can implement:
+        * our traits on ANY types
+        * foreign traits on our types
+        * BUT NOT foreign types on foreign types
+
+    */
+
+
+    // Our trait, our type
+    {
+        trait Signed {
+            fn is_negative(self) -> bool;
+        }
+
+        struct Number {
+            value: i32
+        }
+
+        impl Signed for Number {
+            fn is_negative(self) -> bool {
+                self.value < 0
+            }
+        }
+
+        let n = Number{value: 1};
+        println!("Negative? {}", n.is_negative());
+
+    }
+
+    // Our trait, foreign type
+    {
+        trait Signed {
+            fn is_negative(self) -> bool;
+        }
+
+        impl Signed for i32 {
+            fn is_negative(self) -> bool {
+                self < 0
+            }
+        }
+
+        let n = -10;
+        println!("Negative? {}", n.is_negative());
+    }
+
+    // Foreign trait, our type
+    {
+        struct Number {
+            value: i32
+        }
+
+        impl std::ops::Neg for Number {
+            type Output = Self;
+            fn neg(self) -> Self {
+                Self {
+                    value: -self.value
+                }
+            }
+        }
+
+        // let n = Number { value: 99 };
+        // println!("n: {}\tNegative n: {}", n.value, n.neg().value);
+    }
 }
