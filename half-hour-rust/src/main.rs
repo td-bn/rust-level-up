@@ -367,4 +367,48 @@ fn main() {
         // let n = Number { value: 99 };
         // println!("n: {}\tNegative n: {}", n.value, n.neg().value);
     }
+
+    // Marker traits
+    /*
+      Some traits are markers
+      They don't say that the type implements some methods
+      They say certain things can be done with the type
+     */
+    {
+        // i32 implements the copy trait i.e. i32 is Copy
+        let a: i32 = 42;
+        let b = a; // a is copied
+        let c = a; // a is copied again
+        println!("Copied a into b and c. Value: {}, {}", b, c);
+    }
+
+    {
+        fn print_num(x: i32) {
+            println!("{}", x);
+        }
+
+        let a = 42;
+        print_num(a); // a is copied
+        print_num(a); // a is copied again
+    }
+
+    {
+        // Following code results in error
+
+        // let n = Number { value: 51 };
+        // let m = n; // `n` is moved into `m`
+        // let o = n; // error: use of moved value: `n`
+        
+        // So does THIS 
+
+        // fn print_number(n: Number) {
+        //     println!("number {}", n.value);
+        // }
+
+        // fn main() {
+        //     let n = Number {value: 51 };
+        //     print_number(n); // `n` is moved
+        //     print_number(n); // error: use of moved value: `n`
+        // }
+    }
 }
