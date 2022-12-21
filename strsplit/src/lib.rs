@@ -1,13 +1,13 @@
 
-pub struct StrSplit<'a> {
+pub struct StrSplit<'a, 'delim> {
     remainder: Option<&'a str>,
-    delimiter: &'a str,
+    delimiter: &'delim str,
 }
 
 
 // I'll give you a StrSplit that lasts for as long as the lifetime of the &str you give me
-impl<'a> StrSplit<'a> {
-    pub fn new(haystack: &'a str, delim: &'a str) -> Self {
+impl<'a, 'delim> StrSplit<'a, 'delim> {
+    pub fn new(haystack: &'a str, delim: &'delim str) -> Self {
         Self {
             remainder: Some(haystack),
             delimiter: delim
@@ -15,7 +15,7 @@ impl<'a> StrSplit<'a> {
     }
 }
 
-impl<'a> Iterator for StrSplit<'a> {
+impl<'a, 'delim> Iterator for StrSplit<'a, 'delim> {
     type Item = &'a str;
 
     fn next(&mut self) -> Option<Self::Item> {
@@ -34,6 +34,14 @@ impl<'a> Iterator for StrSplit<'a> {
 fn it_works() {
     let haystack = "a b c d e";
     let letters: Vec<_> = StrSplit::new(haystack, " ").collect();
+
+    assert_eq!(letters, vec!["a", "b", "c", "d", "e"]);
+}
+
+#[test]
+fn it_works_for_chars() {
+    let haystack = "a b c d e";
+    let letters: Vec<_> = StrSplit::new(haystack, &format!("{}", ' ')).collect();
 
     assert_eq!(letters, vec!["a", "b", "c", "d", "e"]);
 }
