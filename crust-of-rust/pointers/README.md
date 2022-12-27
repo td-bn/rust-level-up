@@ -30,3 +30,17 @@ Normally all borrow checks are done at compile time.
 RefCell allows us to do safe dynamically checked borrowing.
 
 
+## Rc
+
+Rc refers to reference counting pionters. 
+
+It provides a shared ownership of a value of type `T`, allocating in the heap. Calling a `clone` method returns a pointer to the same allocation in the heap.
+
+When the last `Rc` pointer to the allocation is destroyed, the value is dropped.
+
+Since sharing mutable references is not permitted by default in Rust, we have to put a 
+`Cell` and `Refcell` insdie an `Rc`.
+
+`Rc` cannot be send between thread.
+
+
