@@ -18,6 +18,9 @@ struct SharedState<T> {
     refcount: Cell<usize>,
 }
 
+// NOTE: NonNull is !Sync, hence we don't need to explicitly tell 
+// the compiler
+
 // has the raw pointer to the shared state
 pub struct Rc<T> {
     state: NonNull<SharedState<T>>,
