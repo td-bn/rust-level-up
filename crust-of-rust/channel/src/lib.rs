@@ -1,11 +1,11 @@
-use std::sync::{Arc, Condvar, Mutex};
 use std::collections::VecDeque;
+use std::sync::{Arc, Condvar, Mutex};
 
-// Simple implementation of a channel 
+// Simple implementation of a channel
 //
 // Multiple sender single receiver channel
 //
-// Senders append data to a VecDeque, 
+// Senders append data to a VecDeque,
 // The Receiver pops off the VecDeque
 
 pub struct Sender<T> {
@@ -44,7 +44,7 @@ impl<T> Drop for Sender<T> {
         let was_last = data.senders == 0;
         drop(data);
 
-        // If there are no more senders, we want to wake up the 
+        // If there are no more senders, we want to wake up the
         // receiver in case it is waiting
         if was_last {
             self.shared.available.notify_one();
@@ -66,7 +66,7 @@ impl<T> Receiver<T> {
         // If our buffer has some items,
         // no need to obtain lock
         if let Some(t) = self.buffer.pop_front() {
-            return Some(t)
+            return Some(t);
         }
         // If there's no data get data swap it with buffer
         let mut data = self.shared.data.lock().unwrap();
@@ -77,7 +77,7 @@ impl<T> Receiver<T> {
                         std::mem::swap(&mut data.queue, &mut self.buffer);
                     }
                     return Some(t);
-                },
+                }
                 None if data.senders == 0 => return None,
                 None => {
                     data = self.shared.available.wait(data).unwrap();
@@ -98,13 +98,12 @@ struct Shared<T> {
     available: Condvar,
 }
 
-
 pub fn channel<T>() -> (Sender<T>, Receiver<T>) {
     // Create a default shared state
-    let shared = Shared { 
-        data: Mutex::new( Data {
+    let shared = Shared {
+        data: Mutex::new(Data {
             queue: VecDeque::default(),
-            senders: 1
+            senders: 1,
         }),
         available: Condvar::new(),
     };
@@ -120,12 +119,11 @@ pub fn channel<T>() -> (Sender<T>, Receiver<T>) {
     )
 }
 
-
 #[cfg(test)]
 mod tests {
 
     use super::*;
-    
+
     #[test]
     fn ping_pong() {
         let (mut sn, mut rc) = channel();
@@ -143,8 +141,8 @@ mod tests {
 
     // This is the behaviour right now as the receiver is dropped
     //
-    // This is a design decision. We need to see how we need to 
-    // handle this case. 
+    // This is a design decision. We need to see how we need to
+    // handle this case.
     // We can modify send to return an result and handle the error
     // and such
     #[test]
@@ -154,4 +152,3 @@ mod tests {
         sn.send(42);
     }
 }
-
